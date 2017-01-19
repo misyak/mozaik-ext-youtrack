@@ -1,2 +1,2 @@
 # mozaik-ext-youtrack
-mozaik extension for Youtrack
+mozaik extension for YouTrack
