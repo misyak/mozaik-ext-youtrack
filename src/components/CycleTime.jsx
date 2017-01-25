@@ -50,7 +50,7 @@ class CycleTime extends Component {
                     <span className="widget__header__subject">
                         {title}
                     </span>
-                    <i className="fa fa-clock"/>
+                    <i className="fa fa-clock-o"/>
                 </div>
                 <div className="value">
                     <span>{cycleTime}</span>
