@@ -1,4 +1,4 @@
-import CycleTime               from './CycleTime.jsx';
+import CycleTime from './CycleTime.jsx';
 
 export default {
     CycleTime
