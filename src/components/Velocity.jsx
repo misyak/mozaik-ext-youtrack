@@ -3,17 +3,17 @@ import reactMixin                       from 'react-mixin';
 import { ListenerMixin }                from 'reflux';
 import Mozaik                           from 'mozaik/browser';
 
-class CycleTime extends Component {
+class Velocity extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {cycleTime: null};
+        this.state = {velocity: null};
     }
 
     getInitialState() {
         return {
-            cycleTime: null
+            velocity: null
         };
     }
 
@@ -21,7 +21,7 @@ class CycleTime extends Component {
 
         const { projectID, sprintStart, sprintEnd } = this.props;
         return {
-            id: `youtrack.cycleTime.${this.props.projectID}`,
+            id: `youtrack.velocity.${this.props.projectID}`,
             params: {
                 title: this.props.title,
                 projectID,
@@ -33,13 +33,13 @@ class CycleTime extends Component {
 
     onApiData(data) {
         this.setState({
-            cycleTime: data
+            velocity: data
         });
     }
 
     render() {
 
-        const cycleTime = this.state.cycleTime || 'Calculating ...';
+        const text = (this.state.velocity) ? `${this.state.velocity} Story points` : 'Calculating ...';
         const {title, sprintStart, sprintEnd} = this.props;
 
         const datesString = `from:${sprintStart} to:${sprintEnd}`
@@ -50,10 +50,10 @@ class CycleTime extends Component {
                     <span className="widget__header__subject">
                         {title}
                     </span>
-                    <i className="fa fa-clock-o"/>
+                    <i className="fa fa-line-chart"/>
                 </div>
                 <div className="data">
-                    <span>{cycleTime}</span>
+                    <span>{text}</span>
                 </div>
                 <div className="dates">
                     <span>{datesString}</span>
@@ -63,20 +63,20 @@ class CycleTime extends Component {
     }
 }
 
-CycleTime.displayName = 'CycleTime';
+Velocity.displayName = 'Velocity';
 
-CycleTime.propTypes = {
+Velocity.propTypes = {
     projectID: PropTypes.string.isRequired,
     sprintStart: PropTypes.string.isRequired,
     sprintEnd: PropTypes.string.isRequired,
     title: PropTypes.string
 };
 
-CycleTime.defaultProps = {
-    title: 'YoutTrack Cycle time'
+Velocity.defaultProps = {
+    title: 'Team velocity'
 };
 
-reactMixin(CycleTime.prototype, ListenerMixin);
-reactMixin(CycleTime.prototype, Mozaik.Mixin.ApiConsumer);
+reactMixin(Velocity.prototype, ListenerMixin);
+reactMixin(Velocity.prototype, Mozaik.Mixin.ApiConsumer);
 
-export default CycleTime;
+export default Velocity;

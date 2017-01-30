@@ -43,7 +43,7 @@ const client = mozaik => {
                 mozaik.logger.error(chalk.red(`[youtrack] ${ err.error }`));
                 throw err;
             });
-    }
+    };
 
     const calculateCycleTime = (issues) => {
 
@@ -69,46 +69,64 @@ const client = mozaik => {
                     cycleTimes.push(resolutionTimes[key] - value);
                 }
             });
+
             const cycleTime = _.round(_.sum(cycleTimes) / cycleTimes.length);
             const cycleTimeString = prettyMs(cycleTime, {verbose: true});
             return cycleTimeString;
         });
-    }
+    };
 
     const getWorkStartedTime = (changes) => {
         let workStartedTime = 0;
 
-        // Object describing start of development
-        const progressStarted = {
-            name: 'Stage',
-            oldValue: [
-                'Ready'
-            ],
-            newValue: [
-                'In Progress'
-            ]
-        };
-
-        _.find(changes, (change) => {
+        _.each(changes, (change) => {
             // check if progress has started
-            const hasStarted = _.find(change.field, progressStarted);
-            if (hasStarted) {
-                // find timestamp when it was updated
-                const updated = _.find(change.field, {'name': 'updated'})
+            const hasStrated = _.find(change.field, (item) => {
+                return (_.includes(item.oldValue, 'Ready') && _.includes(item.newValue, 'In Progress'))
+            });
+            if ( hasStrated ) {
+                const updated = _.find(change.field, {'name': 'updated'});
                 workStartedTime = updated.value;
+                // end each cycle
+                return false;
             }
         });
         return workStartedTime;
-    }
+    };
+
+    const calculateVelocity = (issues) => {
+        let storyPoints = [];
+
+        _.each(issues, (issue)=> {
+            const hasStoryPoints = _.find(issue.field, {'name': 'Story Points'});
+            if (hasStoryPoints) {
+                storyPoints.push(parseInt(hasStoryPoints.value[0]));
+            }
+        });
+        const velocity = _.sum(storyPoints);
+        return velocity;
+    };
+
+    const getIssuesApiUri = (params) => {
+        const filter = `Stage: Released resolved date: ${params.sprintStart} .. ${params.sprintEnd}`;
+        const encodedFilter = encodeURIComponent(filter);
+        return `/rest/issue/byproject/${params.projectID}?filter=${encodedFilter}&max=30`;
+    };
 
     const apiMethods = {
+
         cycleTime(params) {
-            const filter = `Stage: Released resolved date: ${params.sprintStart} .. ${params.sprintEnd}`
-            const encodedFilter = encodeURIComponent(filter);
-            return buildRequest(`/rest/issue/byproject/${params.projectID}?filter=${encodedFilter}&max=30`)
+            return buildRequest(getIssuesApiUri(params))
                 .then((res) => {
                     return calculateCycleTime(res.body)
                         .then(res => res);
+                })
+        },
+
+        velocity(params) {
+            return buildRequest(getIssuesApiUri(params))
+                .then((res) => {
+                    return calculateVelocity(res.body);
                 })
         }
     };
