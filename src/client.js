@@ -3,6 +3,7 @@ import config  from './config';
 import chalk   from 'chalk';
 import _ from 'lodash';
 import prettyMs from 'pretty-ms';
+import moment from 'moment-duration-format';
 
 /**
  * Configures and returns youtrack client.
@@ -115,7 +116,7 @@ const client = mozaik => {
             });
 
             const cycleTime = _.round(_.sum(cycleTimes) / cycleTimes.length);
-            const cycleTimeString = prettyMs(cycleTime, {verbose: true});
+            const cycleTimeString = moment.duration(cycleTime,'hours').format("d [days] h [hours]");
             return cycleTimeString;
         });
     };
@@ -238,7 +239,7 @@ const client = mozaik => {
                 status: '[youtrack] processAgile error: probably wrong response'
             });
         }
-    }
+    };
 
     const apiMethods = {
 
