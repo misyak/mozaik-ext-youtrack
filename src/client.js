@@ -2,7 +2,6 @@ import request from 'superagent-bluebird-promise';
 import config  from './config';
 import chalk   from 'chalk';
 import _ from 'lodash';
-import prettyMs from 'pretty-ms';
 import moment from 'moment-duration-format';
 
 /**
