@@ -2,7 +2,8 @@ import request from 'superagent-bluebird-promise';
 import config  from './config';
 import chalk   from 'chalk';
 import _ from 'lodash';
-import moment from 'moment-duration-format';
+import moment from 'moment';
+require("moment-duration-format");
 
 /**
  * Configures and returns youtrack client.
@@ -115,7 +116,8 @@ const client = mozaik => {
             });
 
             const cycleTime = _.round(_.sum(cycleTimes) / cycleTimes.length);
-            const cycleTimeString = moment.duration(cycleTime,'hours').format("d [days] h [hours]");
+            const cycleTimeHours = cycleTime/1000/60/60;
+            const cycleTimeString = moment.duration(cycleTimeHours, 'hours').format("d [days] h [hours]");
             return cycleTimeString;
         });
     };
