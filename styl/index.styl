@@ -57,15 +57,15 @@
 }
 
 .youtrack__column_fg {
-  background-color: #25b7ff;
+  background-color: $success-color;
   align-items: flex-end;
-  width: 100%
+  width: 100%;
   position: absolute;
   bottom: 0;
 }
 
 .youtrack__column_fg__exceeds {
-  background-color: #c10000;
+  background-color: $failure-color;
 }
 
 .youtrack__column__text {
@@ -82,5 +82,7 @@
 }
 
 .youtrack__column__text__exceeds {
-  color: #c10000;
+  color: $failure-color;
+  text-shadow: 0px 0px 4px #444;
+  border-radius: 50%;
 }
